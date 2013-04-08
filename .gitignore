@@ -1,3 +1,7 @@
+#Some specific files for me. 
+SConstruct
+.ycm_extra_config.py
+
 # Compiled Object files
 *.slo
 *.lo
