@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
 
 	variables_map vm;
 	store(parse_command_line(argc,argv,cmdline_desc), vm);
-	store(parse_config_file<char>("config.cfg", config_desc), vm);
+	//store(parse_config_file<char>("config.cfg", config_desc), vm);
 	notify(vm);	
 
 	if (vm.count("help")) {

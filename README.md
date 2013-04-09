@@ -43,3 +43,11 @@ Command line argument
 	-h (help)
 	-r=y/n/1/0 --random
 	
+------------------------------------------------------
+Bygg testfil: |
+---------------
+1. Läs fil (får en ström) och gör om till en mapp (givet en mapp och en fil, fyll mappen)		//Gustav gör detta
+2. Hämta alla testfiler och mata dessa (som ström) till funktion från 1.
+
+3. Kör naive bayes på alla filer 
+4. Bayes-funktionen
