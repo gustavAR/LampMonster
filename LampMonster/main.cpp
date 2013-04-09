@@ -18,6 +18,10 @@ using namespace boost::filesystem;
 options_description GetCmdOnlyOptions();
 options_description GetConfigOptions();
 
+/*Creates an option_description with describes 
+ *all the commands that can only be invoked 
+ *throug the command line. (includes help and others) 
+ */
 options_description GetCmdOnlyOptions()
 {
 	options_description cmdonly_desc("General options");
@@ -29,7 +33,11 @@ options_description GetCmdOnlyOptions()
 
 	return cmdonly_desc;
 }
-
+/* Creates an option_descripton witch describes
+  * general configuration options. Any of these
+  * options can be specified through the command
+  * line or written in the configuration file.
+  */
 options_description GetConfigOptions() 
 {
 	typedef vector<string> vec;
@@ -52,7 +60,11 @@ options_description GetConfigOptions()
 	return config_desc;	
 }
 
-
+/*
+ * Takes care of all the cases that would cause the program to do an early return.
+ * This gives users a chanse to see (some errors) in input data and provide other
+ * services such as help and version information.
+ */
 int handleEarlyReturn(const variables_map& vm, const options_description& cmdline_desc) 
 {
 	if (vm.count("help")) {
@@ -100,7 +112,7 @@ int main(int argc, char *argv[])
 
 	fileManagerTests();
 
-	
+	//Read input from the command line and the config file.
 	auto trainingSize   = vm["trainsize"].as<int>();
 	auto outputSize		= vm["outputsize"].as<int>();
 	auto trainingSet    = vm["train"].as<vector<string>>();
