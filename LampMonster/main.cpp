@@ -15,9 +15,6 @@ using namespace std;
 using namespace boost::program_options;
 using namespace boost::filesystem;
 
-options_description GetCmdOnlyOptions();
-options_description GetConfigOptions();
-
 /*Creates an option_description with describes 
  *all the commands that can only be invoked 
  *throug the command line. (includes help and others) 
@@ -127,7 +124,18 @@ int main(int argc, char *argv[])
 	auto posProcessingPaths = GetProcessingPaths(rootPath, outputSet, "pos", trainingSize, outputSize);
 	auto negProcessingPaths = GetProcessingPaths(rootPath, outputSet, "neg", trainingSize, outputSize);
 
-
+	//auto posBagOfWords = BuildBagOfWords(posTrainPaths);
+	//auto negBagOfWords = BuildBagOfWords(negTrainPaths);
+	
+	//for(int i = 0; i < outputSize; i++) {
+	//	auto words = ReadWordsFromFile(posProcessingPaths[i]);
+	//	double posResult = ProcessNaiveBayes(0.5, words, posBagOfWords);
+	//	double negResult = ProcessNaiveBayes(0.5, words, negBagOfWords);
+	//  if(posResult < negResult)
+	//		cout << "Naive Bayes was correct on file: " << posProcessingPaths[i] << '\n';
+	//	else
+	//		cout << "Naive Bayes was inncorrect on file: " << posProcessingPaths[i] << '\n';
+	//}
 
 /*
 	cout << "Trainsize: " << trainingSize 
