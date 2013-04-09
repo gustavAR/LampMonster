@@ -13,6 +13,7 @@
 
 using namespace std;
 using namespace boost::program_options;
+using namespace boost::filesystem;
 
 options_description GetCmdOnlyOptions();
 options_description GetConfigOptions();
@@ -46,34 +47,14 @@ options_description GetConfigOptions()
 		 "number of files that will be evaluated. (-1) = all files")
 		("random,r", value<bool>()->default_value(false),
 		 "if true the training set will be selected at random."
-		 "otherwize the first -ts will be selected for training.");
+		 "otherwize the first -ts will be selected for training.")
+		 ("rootpath", value<string>(), "root to the amazon files.");
 	return config_desc;	
 }
 
 
-int main(int argc, char *argv[])
-{	
-
-	auto cmdonly_desc = GetCmdOnlyOptions();
-	auto config_desc = GetConfigOptions();
-	
-	options_description cmdline_desc;
-	cmdline_desc.add(config_desc).add(cmdonly_desc);
-
-	variables_map vm;
-	store(parse_command_line(argc,argv,cmdline_desc), vm);
-	try {
-		store(parse_config_file<char>("config.cfg", config_desc), vm);
-	} catch(...) {
-	    cout << "no config found\n";
-	}
-	notify(vm);
-
-	
-
-	fileManagerTests();
-
-
+int handleEarlyReturn(const variables_map& vm, const options_description& cmdline_desc) 
+{
 	if (vm.count("help")) {
 		cout << cmdline_desc << endl;
 		return 1;
@@ -93,15 +74,50 @@ int main(int argc, char *argv[])
 		return 5;
 	}	
 
-	
 
-	auto trainingSize = vm["trainsize"].as<int>();
+}
+
+int main(int argc, char *argv[])
+{	
+
+	auto cmdonly_desc = GetCmdOnlyOptions();
+	auto config_desc = GetConfigOptions();
+	
+	options_description cmdline_desc;
+	cmdline_desc.add(config_desc).add(cmdonly_desc);
+
+	variables_map vm;
+	store(parse_command_line(argc,argv,cmdline_desc), vm);
+	try {
+		store(parse_config_file<char>("config.cfg", config_desc), vm);
+	} catch(...) {
+	    cout << "no config found\n";
+	}
+	notify(vm);
+
+	if(!handleEarlyReturn(vm, cmdline_desc))
+		return 1;
+
+	fileManagerTests();
+
+	
+	auto trainingSize   = vm["trainsize"].as<int>();
 	auto outputSize		= vm["outputsize"].as<int>();
-	auto trainingSet  = vm["train"].as<vector<string>>();
-	auto outputSet 	= vm["output"].as<vector<string>>();
+	auto trainingSet    = vm["train"].as<vector<string>>();
+	auto outputSet		= vm["output"].as<vector<string>>();
 	auto randomize		= vm["random"].as<bool>();
 	bool printInfo		= vm.count("info"); 
+	path rootPath(vm["rootpath"].as<string>());
 
+	auto posTrainPaths = GetTrainingPaths(rootPath, trainingSet, "pos", trainingSize);
+	auto negTrainPaths = GetTrainingPaths(rootPath, trainingSet, "neg", trainingSize);
+
+	auto posProcessingPaths = GetProcessingPaths(rootPath, outputSet, "pos", trainingSize, outputSize);
+	auto negProcessingPaths = GetProcessingPaths(rootPath, outputSet, "neg", trainingSize, outputSize);
+
+
+
+/*
 	cout << "Trainsize: " << trainingSize 
 		  << " OuputSize: " << outputSize 
 		  << "\nRandomize: " << randomize 
@@ -111,7 +127,7 @@ int main(int argc, char *argv[])
 
    cout  << "\nOutputSet: "; 
 	copy(begin(outputSet), end(outputSet), ostream_iterator<string>(cout, " "));
-
+*/
 	
 
 	return 0;
