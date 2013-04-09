@@ -50,6 +50,7 @@ options_description GetConfigOptions()
 
 int main(int argc, char *argv[])
 {	
+
 	auto cmdonly_desc = GetCmdOnlyOptions();
 	auto config_desc = GetConfigOptions();
 
@@ -58,15 +59,18 @@ int main(int argc, char *argv[])
 
 	variables_map vm;
 	store(parse_command_line(argc,argv,cmdline_desc), vm);
+	try {
 	store(parse_config_file<char>("config.cfg", config_desc), vm);
-	notify(vm);	
+	} catch(...) {
+	    cout << "no config found\n";
+	}
+	notify(vm);
 
 	if (vm.count("help")) {
 		cout << cmdline_desc << endl;
 		return 1;
 	} else if(vm.count("version")) {
 		cout << "Version: " << VERSION_NUMBER << endl; 
-
 	}	else if (!vm.count("algorithm")) {
 		cout << "Please specify atleast one algorithm to use. " << endl;	
 		return 2;
@@ -80,7 +84,6 @@ int main(int argc, char *argv[])
 		cout << "trainsize must be greater then 0!" << endl;
 		return 5;
 	}	
-
 
 	auto trainingSize = vm["trainsize"].as<int>();
 	auto outputSize		= vm["outputsize"].as<int>();
