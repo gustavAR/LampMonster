@@ -1,9 +1,11 @@
 #include <boost/program_options/options_description.hpp>
 #include <boost/program_options/parsers.hpp>
 #include <boost/program_options/variables_map.hpp>
+#include <boost/filesystem.hpp>
 #include <iostream>
 #include <algorithm>
 #include <string>
+#include "file_manager.h"
 
 #define VERSION_NUMBER 0.0
 #define DEFAULT_TRAIN_SIZE 10
@@ -48,23 +50,29 @@ options_description GetConfigOptions()
 	return config_desc;	
 }
 
+
 int main(int argc, char *argv[])
 {	
 
 	auto cmdonly_desc = GetCmdOnlyOptions();
 	auto config_desc = GetConfigOptions();
-
+	
 	options_description cmdline_desc;
 	cmdline_desc.add(config_desc).add(cmdonly_desc);
 
 	variables_map vm;
 	store(parse_command_line(argc,argv,cmdline_desc), vm);
 	try {
-	store(parse_config_file<char>("config.cfg", config_desc), vm);
+		store(parse_config_file<char>("config.cfg", config_desc), vm);
 	} catch(...) {
 	    cout << "no config found\n";
 	}
 	notify(vm);
+
+	
+
+	fileManagerTests();
+
 
 	if (vm.count("help")) {
 		cout << cmdline_desc << endl;
@@ -85,6 +93,8 @@ int main(int argc, char *argv[])
 		return 5;
 	}	
 
+	
+
 	auto trainingSize = vm["trainsize"].as<int>();
 	auto outputSize		= vm["outputsize"].as<int>();
 	auto trainingSet  = vm["train"].as<vector<string>>();
@@ -101,6 +111,8 @@ int main(int argc, char *argv[])
 
    cout  << "\nOutputSet: "; 
 	copy(begin(outputSet), end(outputSet), ostream_iterator<string>(cout, " "));
+
+	
 
 	return 0;
 }
