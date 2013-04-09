@@ -43,3 +43,5 @@ Command line argument
 	-h (help)
 	-r=y/n/1/0 --random
 	
+	BuildBagOfWords
+vector<boost::filesystem::path>
