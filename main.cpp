@@ -47,7 +47,7 @@ options_description GetConfigOptions()
 		 "otherwize the first -ts will be selected for training.");
 	return config_desc;	
 }
-
+/*
 int main(int argc, char *argv[])
 {	
 	auto cmdonly_desc = GetCmdOnlyOptions();
@@ -101,4 +101,4 @@ int main(int argc, char *argv[])
 
 	return 0;
 }
-
+*/
