@@ -1,18 +1,13 @@
-#include <boost/program_options/options_description.hpp>
-#include <boost/program_options/parsers.hpp>
-#include <boost/program_options/variables_map.hpp>
 #include <iostream>
-#include <algorithm>
-#include <string>
+#include "NaiveBayes.h"
 
 #define VERSION_NUMBER 0.0
 #define DEFAULT_TRAIN_SIZE 10
 
 
 using namespace std;
-using namespace boost::program_options;
 
-static double NBC(double probOfClass, map<string,int> vocabulary, vector<string> words)
+double NBC(double probOfClass, map<string,int> vocabulary, vector<string> words, double prior)
 {
 	double product = 1;
 	int totNumWordsInVoc = 0;
@@ -23,17 +18,17 @@ static double NBC(double probOfClass, map<string,int> vocabulary, vector<string>
 	for (string word : words) //calculate probalility for each word to belong to classification with the vocabulary
 	{
 		//cout<<"Product = "<<product<<endl;
-		double denom = (vocabulary.at(word)+1);
+		double denom = (vocabulary.at(word)+prior);
 		//cout<<"Word = "<< word << "\t#times+1: "<< denom <<endl;
 
-		double nom = (totNumWordsInVoc + vocabulary.size());
+		double nom = (totNumWordsInVoc + vocabulary.size()*prior);
 		//cout<<"nominator: "<<nom<<endl;
 		product *= (denom/nom);
 		//cout<<endl;
 	}
 	return product*probOfClass;
 }
-void main(void)
+void NaiveBayesTest(void)
 {
 	map<string,int> m;
 	m["Buuuh"] = 2;
@@ -44,7 +39,7 @@ void main(void)
 	m["Hahahahohohhuehue"] = 1;
 
 	map<string,int> m2;
-	m2["Buuuh"] = 3;
+	m2["Buuuh"] = 1;
 	m2["Aaah"] = 0;
 	m2["Ooooh"] = 2;
 	m2["Oooiihihih"] = 0;
@@ -60,6 +55,5 @@ void main(void)
 	s[5]="Ooooh";
 	s[6]="Hehehaha";
 
-	cout << "Result: " << (NBC(0.5, m, s) < NBC(0.5, m2, s)? "yay!":"ops") <<endl;
-	while(true);
+	cout << "Result: " << (NBC(0.5, m, s, 1) < NBC(0.5, m2, s, 1)? "yay!":"ops") <<endl;
 }

@@ -47,7 +47,13 @@ Command line argument
 Bygg testfil: |
 ---------------
 1. Läs fil (får en ström) och gör om till en mapp (givet en mapp och en fil, fyll mappen)		//Gustav gör detta
-2. Hämta alla testfiler och mata dessa (som ström) till funktion från 1.
+2. Hämta alla testfiler och mata dessa (som ström (filestream)) till funktion från 1.
 
 3. Kör naive bayes på alla filer 
 4. Bayes-funktionen
+
+NaiveBayes: Algorithm 
+{
+	public NaiveBayes (map<string,Int> bagOfWords){}
+	private map<string,Int> bagOfWords;
+	double evaluate()
