@@ -18,7 +18,9 @@ double NBC(double probOfClass, map<string,int> vocabulary, vector<string> words,
 	double nom = (totNumWordsInVoc + vocabulary.size()*prior);
 	for (string word : words) //calculate probalility for each word to belong to classification with the vocabulary
 	{
-		double denom = (vocabulary.at(word)+prior);
+		double denom = prior;
+		if (vocabulary.find(word) != vocabulary.end())
+			denom += vocabulary.at(word);
 		product *= (denom/nom);
 	}
 	return product*probOfClass;
