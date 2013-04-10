@@ -6,6 +6,9 @@ SConstruct
 *.swp
 *.pyc
 
+#The test data
+Documents\
+
 
 # Compiled Object files
 *.slo
