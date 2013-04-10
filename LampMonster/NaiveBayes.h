@@ -19,4 +19,8 @@ private:
 	std::vector<Category> categories;
 	int prior;
 };
+
+
+double NBC(double p, const std::map<std::string, int>& voc, const std::vector<std::string>& word, double prior);
+
 #endif 

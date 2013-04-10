@@ -2,24 +2,22 @@
 #include <boost/iostreams/stream.hpp>
 #include <boost/iostreams/device/file.hpp>
 #include <iostream>
+#include <boost/algorithm/string.hpp>
+#include "FileParser.h"
 
 using namespace std;
 namespace fs = boost::filesystem;
 namespace io = boost::iostreams;
 
-const map<string, int> BuildBagOfWords(const vector<fs::path> files)
+const map<string, int> BuildBagOfWords(const vector<fs::path>& files)
 {	
+	using namespace boost::algorithm;
 	map<string, int> bag;
-	
-	for (auto itr = files.begin(), end = files.end(); itr != end; ++itr) {
-		io::stream<io::file_source> file(fs::canonical(*itr).string());
-		string word;
-		while (file>>word){
-			bag[word]++;
-		}
-		file.close();
-	}
+	FileParser parser(".,()[]{}\/>< :;\"`'*&^%$#@");
+	for(auto& word : parser.ParseFiles(files))
+		bag[word]++;
 
+	
 	return bag;
 }
 

@@ -15,6 +15,8 @@
 #include <boost/iostreams/device/file.hpp>
 #include <map>
 #include <istream>
+#include "FileParser.h"
+
 
 using namespace std;
 namespace fs = boost::filesystem;
@@ -95,21 +97,9 @@ int handleEarlyReturn(const variables_map& vm, const options_description& cmdlin
 		cout << "trainsize must be greater then 0!" << endl;
 		return 5;
 	}	
-
-
+	return 0;
 }
 
-vector<string> readWords(path filepath)
-{
-		io::stream<io::file_source> file(fs::canonical(filepath).string());
-		string word;
-		vector<string> words;
-		while (file>>word){
-			words.push_back(word);
-		}
-		file.close();
-		return words;
-}
 
 int main(int argc, char *argv[])
 {	
@@ -129,10 +119,10 @@ int main(int argc, char *argv[])
 	}
 	notify(vm);
 
-	if(!handleEarlyReturn(vm, cmdline_desc))
+	if(handleEarlyReturn(vm, cmdline_desc))
 		return 1;
-
-	fileManagerTests();
+	
+	//BuildBagTest();
 
 	//Read input from the command line and the config file.
 	auto trainingSize   = vm["trainsize"].as<int>();
@@ -152,27 +142,23 @@ int main(int argc, char *argv[])
 	auto posBagOfWords = BuildBagOfWords(posTrainPaths);
 	auto negBagOfWords = BuildBagOfWords(negTrainPaths);
 	
+
+	
+	FileParser parser(".,()[]{}\/>< :;\"`'*&^%$#@");
+	
+
+	int correctCount = 0;
 	for(int i = 0; i < outputSize; i++) {
-		auto words = readWords(posProcessingPaths[i]);
+		auto words = parser.ParseFile(posProcessingPaths[i]);
 		double posResult = NBC(0.5, posBagOfWords, words, 1);
 		double negResult = NBC(0.5, negBagOfWords, words, 1);
-	  if(posResult > negResult)
+	  if(posResult > negResult) {
 			cout << "Naive Bayes was correct on file: " << posProcessingPaths[i] << '\n';
+			correctCount++;
+	  }
 		else
 			cout << "Naive Bayes was inncorrect on file: " << posProcessingPaths[i] << '\n';
 	}
-
-/*
-	cout << "Trainsize: " << trainingSize 
-		  << " OuputSize: " << outputSize 
-		  << "\nRandomize: " << randomize 
-		  << " Print info: " << printInfo
-		  << "\nTrainingSet: ";
-	copy(begin(trainingSet), end(trainingSet), ostream_iterator<string>(cout, " "));
-
-   cout  << "\nOutputSet: "; 
-	copy(begin(outputSet), end(outputSet), ostream_iterator<string>(cout, " "));
-*/
 	
 
 	return 0;
