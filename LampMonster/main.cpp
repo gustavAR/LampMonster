@@ -161,6 +161,10 @@ int main(int argc, char *argv[])
 	}
 	
 
+	cout << correctCount;
+	int i;
+	cin >> i;
+
 	return 0;
 }
 

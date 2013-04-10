@@ -1,5 +1,6 @@
 #include "FileParser.h"
 #include <algorithm>
+#include <iostream>
 #include <boost/algorithm/string.hpp>
 #include <boost/iostreams/stream.hpp>
 #include <boost/iostreams/device/file.hpp>

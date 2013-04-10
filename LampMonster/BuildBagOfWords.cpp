@@ -17,7 +17,15 @@ const map<string, int> BuildBagOfWords(const vector<fs::path>& files)
 	for(auto& word : parser.ParseFiles(files))
 		bag[word]++;
 
+	auto itr = bag.begin();
 	
+	for(; itr != bag.end();) {
+		if(itr->second < 4 || itr->first == "")
+			bag.erase(itr++);
+		else
+			++itr;
+	}
+
 	return bag;
 }
 
