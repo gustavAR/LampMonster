@@ -156,7 +156,7 @@ int main(int argc, char *argv[])
 		auto words = readWords(posProcessingPaths[i]);
 		double posResult = NBC(0.5, posBagOfWords, words, 1);
 		double negResult = NBC(0.5, negBagOfWords, words, 1);
-	  if(posResult < negResult)
+	  if(posResult > negResult)
 			cout << "Naive Bayes was correct on file: " << posProcessingPaths[i] << '\n';
 		else
 			cout << "Naive Bayes was inncorrect on file: " << posProcessingPaths[i] << '\n';

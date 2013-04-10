@@ -2,6 +2,7 @@
 #include <boost/filesystem.hpp>
 #include <string>
 #include <vector>
+#include <iostream>
 
 using namespace std;
 using namespace boost::filesystem;

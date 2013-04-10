@@ -17,6 +17,7 @@ const std::vector<file_path> GetProcessingPaths(const file_path& root,
 										  const int trainSize,
 									      const int processCount);
 
+std::vector<std::string> GetWords(file_path path);
 
 void fileManagerTests();
 

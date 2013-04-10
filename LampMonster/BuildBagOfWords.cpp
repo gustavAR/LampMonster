@@ -1,7 +1,7 @@
 #include "BuildBagOfWords.h"
 #include <boost/iostreams/stream.hpp>
 #include <boost/iostreams/device/file.hpp>
-#include <istream>
+#include <iostream>
 
 using namespace std;
 namespace fs = boost::filesystem;

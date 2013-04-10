@@ -7,7 +7,7 @@
 
 using namespace std;
 
-double NBC(double probOfClass, map<string,int> vocabulary, vector<string> words, double prior)
+double NBC(double probOfClass, const map<string,int>& vocabulary, const vector<string>& words, double prior)
 {
 	double product = 1;
 	int totNumWordsInVoc = 0;
