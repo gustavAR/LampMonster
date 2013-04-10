@@ -1,0 +1,9 @@
+Try with different alphas when it is working. (shouldm't take much time)
+
+Have half a page on above (discussion) and half a page of 3.1 results and evaluations
+
+Report should focus on extra stuff (extra algorithms / extra data)
+
+All results should have clear parameters listed that that generated the results.
+
+If mail: subject: [AI2013]
