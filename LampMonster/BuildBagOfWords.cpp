@@ -1,14 +1,13 @@
-#include <boost/filesystem.hpp>
+#include "BuildBagOfWords.h"
 #include <boost/iostreams/stream.hpp>
 #include <boost/iostreams/device/file.hpp>
-#include <map>
 #include <istream>
 
 using namespace std;
 namespace fs = boost::filesystem;
 namespace io = boost::iostreams;
 
-map<string, int> BuildBagOfWords(const vector<fs::path> files)
+const map<string, int> BuildBagOfWords(const vector<fs::path> files)
 {	
 	map<string, int> bag;
 	
@@ -18,7 +17,7 @@ map<string, int> BuildBagOfWords(const vector<fs::path> files)
 		while (file>>word){
 			bag[word]++;
 		}
-
+		file.close();
 	}
 
 	return bag;

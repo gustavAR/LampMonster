@@ -46,7 +46,7 @@ const vector<path> GetTrainingPaths(const path& root,
 						   const int trainSize) 
 {
 	//At the moment we igonre randomization of test data. Can always be added later.
-	return GetPaths(root, categories, classification, 0, trainSize);
+	return GetPaths(root, categories, classification, 1, trainSize);
 }
 
 const vector<path> GetProcessingPaths(const path& root,
@@ -55,7 +55,7 @@ const vector<path> GetProcessingPaths(const path& root,
 							    const int trainSize,
 								const int processCount)
 {
-	return GetPaths(root, categories, classification, trainSize, processCount);
+	return GetPaths(root, categories, classification, trainSize + 1, processCount);
 }
 
 

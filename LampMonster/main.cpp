@@ -2,10 +2,23 @@
 #include <boost/program_options/parsers.hpp>
 #include <boost/program_options/variables_map.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/iostreams/stream.hpp>
 #include <iostream>
 #include <algorithm>
 #include <string>
 #include "file_manager.h"
+#include "BuildBagOfWords.h"
+#include "NaiveBayes.h"
+
+#include <boost/filesystem.hpp>
+#include <boost/iostreams/stream.hpp>
+#include <boost/iostreams/device/file.hpp>
+#include <map>
+#include <istream>
+
+using namespace std;
+namespace fs = boost::filesystem;
+namespace io = boost::iostreams;
 
 #define VERSION_NUMBER 0.0
 #define DEFAULT_TRAIN_SIZE 10
@@ -86,6 +99,18 @@ int handleEarlyReturn(const variables_map& vm, const options_description& cmdlin
 
 }
 
+vector<string> readWords(path filepath)
+{
+		io::stream<io::file_source> file(fs::canonical(filepath).string());
+		string word;
+		vector<string> words;
+		while (file>>word){
+			words.push_back(word);
+		}
+		file.close();
+		return words;
+}
+
 int main(int argc, char *argv[])
 {	
 
@@ -124,18 +149,18 @@ int main(int argc, char *argv[])
 	auto posProcessingPaths = GetProcessingPaths(rootPath, outputSet, "pos", trainingSize, outputSize);
 	auto negProcessingPaths = GetProcessingPaths(rootPath, outputSet, "neg", trainingSize, outputSize);
 
-	//auto posBagOfWords = BuildBagOfWords(posTrainPaths);
-	//auto negBagOfWords = BuildBagOfWords(negTrainPaths);
+	auto posBagOfWords = BuildBagOfWords(posTrainPaths);
+	auto negBagOfWords = BuildBagOfWords(negTrainPaths);
 	
-	//for(int i = 0; i < outputSize; i++) {
-	//	auto words = ReadWordsFromFile(posProcessingPaths[i]);
-	//	double posResult = ProcessNaiveBayes(0.5, words, posBagOfWords);
-	//	double negResult = ProcessNaiveBayes(0.5, words, negBagOfWords);
-	//  if(posResult < negResult)
-	//		cout << "Naive Bayes was correct on file: " << posProcessingPaths[i] << '\n';
-	//	else
-	//		cout << "Naive Bayes was inncorrect on file: " << posProcessingPaths[i] << '\n';
-	//}
+	for(int i = 0; i < outputSize; i++) {
+		auto words = readWords(posProcessingPaths[i]);
+		double posResult = NBC(0.5, posBagOfWords, words, 1);
+		double negResult = NBC(0.5, negBagOfWords, words, 1);
+	  if(posResult < negResult)
+			cout << "Naive Bayes was correct on file: " << posProcessingPaths[i] << '\n';
+		else
+			cout << "Naive Bayes was inncorrect on file: " << posProcessingPaths[i] << '\n';
+	}
 
 /*
 	cout << "Trainsize: " << trainingSize 
