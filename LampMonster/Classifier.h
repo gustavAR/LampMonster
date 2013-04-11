@@ -7,6 +7,7 @@
 class Classifier
 {
 public:
-	virtual std::string Classify(std::vector<std::string> words);
+	virtual ~Classifier() { }
+	virtual std::string Classify(std::vector<std::string> words) { return ""; }
 };
 #endif 

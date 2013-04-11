@@ -14,7 +14,7 @@ class NaiveBayes : public Classifier
 {
 public:
 	NaiveBayes(CategoryPaths paths);
-	virtual std::string Classify(std::vector<std::string> words);
+	virtual std::string Classify(std::vector<std::string>& words);
 private:
 	std::vector<Category> categories;
 	int prior;

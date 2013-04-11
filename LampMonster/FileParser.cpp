@@ -63,7 +63,7 @@ void testFileParser() {
 	v.push_back(filepath2);
 	v.push_back(filepath3);
 	
-	FileParser parser(".,()[]{}\/>< :;\"`'*&^%$#@");
+	FileParser parser(".,()[]{}\\/>< :;\"`'*&^%$#@");
 
 	auto words = parser.ParseFiles(v);
 	copy(words.begin(), words.end(), ostream_iterator<string>(cout, "\n"));

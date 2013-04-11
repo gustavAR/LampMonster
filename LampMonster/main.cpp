@@ -16,7 +16,7 @@
 #include <map>
 #include <istream>
 #include "FileParser.h"
-
+#include "CategoryPathFinder.h"
 
 using namespace std;
 namespace fs = boost::filesystem;
@@ -130,38 +130,41 @@ int main(int argc, char *argv[])
 	auto trainingSet    = vm["train"].as<vector<string>>();
 	auto outputSet		= vm["output"].as<vector<string>>();
 	auto randomize		= vm["random"].as<bool>();
-	bool printInfo		= vm.count("info"); 
+	auto printInfo		= static_cast<bool>(vm.count("info")); 
 	path rootPath(vm["rootpath"].as<string>());
+	
 
-	auto posTrainPaths = GetTrainingPaths(rootPath, trainingSet, "pos", trainingSize);
-	auto negTrainPaths = GetTrainingPaths(rootPath, trainingSet, "neg", trainingSize);
+	auto pathFinder = make_shared<CategoryPathFinder>(rootPath, trainingSize, outputSize);
+	
+	auto posTrainPaths = pathFinder->GetTrainingPaths("books");
+	//auto negTrainPaths = pathFinder->GetTrainingPaths("neg");
 
-	auto posProcessingPaths = GetProcessingPaths(rootPath, outputSet, "pos", trainingSize, outputSize);
-	auto negProcessingPaths = GetProcessingPaths(rootPath, outputSet, "neg", trainingSize, outputSize);
+	auto posProcessingPaths = pathFinder->GetProcessingPaths("pos");
+	auto negProcessingPaths = pathFinder->GetProcessingPaths("neg");
 
 	auto posBagOfWords = BuildBagOfWords(posTrainPaths);
-	auto negBagOfWords = BuildBagOfWords(negTrainPaths);
+	//auto negBagOfWords = BuildBagOfWords(negTrainPaths);
+	
+	
+	
+	FileParser parser(".,()[]{}\\/>< :;\"`'*&^%$#@");
 	
 
-	
-	FileParser parser(".,()[]{}\/>< :;\"`'*&^%$#@");
-	
+	//int correctCount = 0;
+	//for(int i = 0; i < outputSize; i++) {
+	//	auto words = parser.ParseFile(posProcessingPaths[i]);
+	//	double posResult = NBC(0.5, posBagOfWords, words, 1);
+	//	double negResult = NBC(0.5, negBagOfWords, words, 1);
+	//  if(posResult > negResult) {
+	//		cout << "Naive Bayes was correct on file: " << posProcessingPaths[i] << '\n';
+	//		correctCount++;
+	//  }
+	//	else
+	//		cout << "Naive Bayes was inncorrect on file: " << posProcessingPaths[i] << '\n';
+	//}
+	//
 
-	int correctCount = 0;
-	for(int i = 0; i < outputSize; i++) {
-		auto words = parser.ParseFile(posProcessingPaths[i]);
-		double posResult = NBC(0.5, posBagOfWords, words, 1);
-		double negResult = NBC(0.5, negBagOfWords, words, 1);
-	  if(posResult > negResult) {
-			cout << "Naive Bayes was correct on file: " << posProcessingPaths[i] << '\n';
-			correctCount++;
-	  }
-		else
-			cout << "Naive Bayes was inncorrect on file: " << posProcessingPaths[i] << '\n';
-	}
-	
-
-	cout << correctCount;
+//	cout << correctCount;
 	int i;
 	cin >> i;
 
